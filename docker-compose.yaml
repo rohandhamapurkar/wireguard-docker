@@ -1,0 +1,30 @@
+# sudo mkdir /opt/wireguard-server
+
+# sudo chown root:root /opt/wireguard-server
+
+# nano /opt/wireguard-server/docker-compose.yaml
+version: "2.1"
+services:
+  wireguard:
+    image: linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Kolkata
+      - SERVERURL=170.187.157.186 #optional
+      - SERVERPORT=51820 #optional
+      - PEERS=1 #optional
+      - PEERDNS=auto #optional
+    #   - INTERNAL_SUBNET=10.13.13.0 #optional
+    volumes:
+      - /opt/wireguard-server/config:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
